@@ -8,10 +8,10 @@ export const googleLogin = async () => {
         access_type: "offline",
         prompt: "consent",
       },
+      redirectTo: "http://localhost:3000/main",
     },
   });
-  // if (data) alert("페이지를 이동합니다");
-  // if (error) console.log("error >>>", error);
+  getGoogleUser();
 };
 
 export const logout = async () => {
@@ -25,5 +25,19 @@ export const getGoogleUser = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log(user);
+
+  const { data, error } = await supabase
+    .from("users")
+    .upsert([
+      {
+        user_id: user.identities[0].identity_data.provider_id,
+        user_email: user.identities[0].identity_data.email,
+        user_name: user.identities[0].identity_data.name,
+        user_create_day: user.identities[0].created_at,
+      },
+    ])
+    .select();
+
+  if (!error) console.log(data);
+  else console.log("error >>>", error);
 };
