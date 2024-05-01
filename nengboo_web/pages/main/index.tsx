@@ -1,6 +1,11 @@
 import { useUserStore } from "@/store/user";
 import pretendard from "@/styles/fonts";
-import { getUserInfo } from "@/utils/actions";
+import {
+  getGoogleUser,
+  getGoogleUserInfo,
+  getKakaoUser,
+  getKakaoUserInfo,
+} from "@/utils/actions";
 import { useEffect } from "react";
 
 export default function MainPage() {
@@ -12,8 +17,11 @@ export default function MainPage() {
 
   useEffect(() => {
     const checkUserStore = async () => {
-      const data = await getUserInfo();
-      if (!user) updateUser(data);
+      await getGoogleUser();
+      await getKakaoUser();
+      const google = await getGoogleUserInfo();
+      const kakao = await getKakaoUserInfo();
+      if (!user) !!google ? updateUser(google) : updateUser(kakao);
     };
     checkUserStore();
   }, []);

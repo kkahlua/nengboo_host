@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { googleLogin } from "@/utils/actions";
+import { googleLogin, kakaoLogin } from "@/utils/actions";
 
 import pretendard from "@/styles/fonts";
 
@@ -37,13 +37,22 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mb-5">
           <Image
             src="/googleLoginImage.svg"
             width={190}
             height={40}
             onClick={googleLogin}
-            alt="logo Image"
+            alt="google Image"
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <Image
+            src="/kakaoLoginImage.svg"
+            width={190}
+            height={40}
+            onClick={kakaoLogin}
+            alt="kakao Image"
           />
         </div>
       </div>

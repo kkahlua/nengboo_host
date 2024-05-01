@@ -11,7 +11,20 @@ export const googleLogin = async () => {
       redirectTo: "http://localhost:3000/main",
     },
   });
-  getGoogleUser();
+};
+
+export const kakaoLogin = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "kakao",
+    options: {
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
+      redirectTo: "http://localhost:3000/main",
+    },
+  });
+  getKakaoUser();
 };
 
 export const logout = async () => {
@@ -39,10 +52,30 @@ export const getGoogleUser = async () => {
     .select();
 
   if (!error) console.log(data);
-  else console.log("error >>>", error);
+  else console.log("getGoogleUser >>>", error);
 };
 
-export const getUserInfo = async () => {
+export const getKakaoUser = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data, error } = await supabase
+    .from("users")
+    .upsert([
+      {
+        user_id: user.user_metadata.provider_id,
+        user_email: user.user_metadata.email,
+        user_name: user.user_metadata.user_name,
+        user_create_day: user.confirmed_at,
+      },
+    ])
+    .select();
+
+  if (!error) console.log(data);
+  else console.log("getKakaoUser >>>", error);
+};
+
+export const getGoogleUserInfo = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -55,5 +88,21 @@ export const getUserInfo = async () => {
   if (!error) {
     console.log(data);
     return data;
-  } else console.log("error >>>", error);
+  } else console.log("getGoogleUserInfo >>>", error);
+};
+
+export const getKakaoUserInfo = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", user.user_metadata.provider_id);
+
+  if (!error) {
+    console.log(data);
+    return data;
+  } else console.log("getKakaoUserInfo >>>", error);
 };
