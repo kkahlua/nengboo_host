@@ -41,3 +41,19 @@ export const getGoogleUser = async () => {
   if (!error) console.log(data);
   else console.log("error >>>", error);
 };
+
+export const getUserInfo = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", user.identities[0].identity_data.provider_id);
+
+  if (!error) {
+    console.log(data);
+    return data;
+  } else console.log("error >>>", error);
+};
