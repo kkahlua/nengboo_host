@@ -1,33 +1,26 @@
 import { useUserStore } from "@/store/user";
-import pretendard from "@/styles/fonts";
-import {
-  getGoogleUser,
-  getGoogleUserInfo,
-  getKakaoUser,
-  getKakaoUserInfo,
-} from "@/utils/actions";
+
+import { getUserInfo, updateUser } from "@/utils/actions";
 import { useEffect } from "react";
 
 export default function MainPage() {
-  const { user, updateUser } = useUserStore();
+  const { user, updateUserState } = useUserStore();
 
   const check = () => {
     console.log(user);
   };
 
   useEffect(() => {
-    const checkUserStore = async () => {
-      await getGoogleUser();
-      await getKakaoUser();
-      const google = await getGoogleUserInfo();
-      const kakao = await getKakaoUserInfo();
-      if (!user) !!google ? updateUser(google) : updateUser(kakao);
+    const initMain = async () => {
+      await updateUser();
+      const data = await getUserInfo();
+      if (!!data) updateUserState(data);
     };
-    checkUserStore();
+    initMain();
   }, []);
 
   return (
-    <div className={pretendard.className}>
+    <div>
       <button onClick={check}>console</button>
     </div>
   );

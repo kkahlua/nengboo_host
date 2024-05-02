@@ -9,10 +9,10 @@ interface User {
 
 interface UserState {
   user: User | null;
-  updateUser: (user: User | null) => void;
+  updateUserState: (user: User | null) => void;
 }
 
 export const useUserStore = create<UserState>()((set) => ({
   user: null,
-  updateUser: (user) => set(() => ({ user })),
+  updateUserState: (user) => set(() => ({ user })),
 }));

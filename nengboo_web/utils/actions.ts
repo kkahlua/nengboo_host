@@ -33,75 +33,42 @@ export const logout = async () => {
   } else console.log("logout >>>", error);
 };
 
-export const getGoogleUser = async () => {
+export const updateUser = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data, error } = await supabase
-    .from("users")
-    .upsert([
-      {
-        user_id: user.identities[0].identity_data.provider_id,
-        user_email: user.identities[0].identity_data.email,
-        user_name: user.identities[0].identity_data.name,
-        user_create_day: user.identities[0].created_at,
-      },
-    ])
-    .select();
+  if (!!user) {
+    const { data, error } = await supabase
+      .from("users")
+      .upsert([
+        {
+          user_id: user.identities[0].identity_data.provider_id,
+          user_email: user.identities[0].identity_data.email,
+          user_name: user.identities[0].identity_data.name,
+          user_create_day: user.identities[0].created_at,
+        },
+      ])
+      .select();
 
-  if (!error) console.log(data);
-  else console.log("getGoogleUser >>>", error);
+    if (!error) console.log(data);
+    else console.log("updateUser >>>", error);
+  }
 };
 
-export const getKakaoUser = async () => {
+export const getUserInfo = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data, error } = await supabase
-    .from("users")
-    .upsert([
-      {
-        user_id: user.user_metadata.provider_id,
-        user_email: user.user_metadata.email,
-        user_name: user.user_metadata.user_name,
-        user_create_day: user.confirmed_at,
-      },
-    ])
-    .select();
+  if (!!user) {
+    let { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", user.identities[0].identity_data.provider_id);
 
-  if (!error) console.log(data);
-  else console.log("getKakaoUser >>>", error);
-};
-
-export const getGoogleUserInfo = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("user_id", user.identities[0].identity_data.provider_id);
-
-  if (!error) {
-    console.log(data);
-    return data;
-  } else console.log("getGoogleUserInfo >>>", error);
-};
-
-export const getKakaoUserInfo = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("user_id", user.user_metadata.provider_id);
-
-  if (!error) {
-    console.log(data);
-    return data;
-  } else console.log("getKakaoUserInfo >>>", error);
+    if (!error) {
+      console.log(data);
+      return data;
+    } else console.log("getUserInfo >>>", error);
+  }
 };
