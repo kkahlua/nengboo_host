@@ -24,14 +24,13 @@ export const kakaoLogin = async () => {
       redirectTo: "http://localhost:3000/main",
     },
   });
-  getKakaoUser();
 };
 
 export const logout = async () => {
   const { error } = await supabase.auth.signOut();
   if (!!error) {
     alert("로그아웃 되었습니다.");
-  } else console.log("error >>>", error);
+  } else console.log("logout >>>", error);
 };
 
 export const getGoogleUser = async () => {

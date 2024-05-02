@@ -46,6 +46,7 @@ export default function Home() {
             alt="google Image"
           />
         </div>
+
         <div className="flex items-center justify-center">
           <Image
             src="/kakaoLoginImage.svg"
