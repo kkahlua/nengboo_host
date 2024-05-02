@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface User {
   user_id: string;
@@ -12,7 +13,17 @@ interface UserState {
   updateUserState: (user: User | null) => void;
 }
 
-export const useUserStore = create<UserState>()((set) => ({
-  user: null,
-  updateUserState: (user) => set(() => ({ user })),
-}));
+// export const useUserStore = create<UserState>()((set) => ({
+//   user: null,
+//   updateUserState: (user) => set(() => ({ user })),
+// }));
+
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      user: null,
+      updateUserState: (user) => set(() => ({ user })),
+    }),
+    { name: "user-storage" }
+  )
+);
