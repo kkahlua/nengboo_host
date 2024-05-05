@@ -26,6 +26,10 @@ const config = {
     },
     extend: {
       colors: {
+        "border-color": "#DDDDDD",
+        "btn-cancel-color": "#EFEFEF",
+        "btn-post-color": "#007CFF",
+        "btn-cancel-text": "#111111",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
