@@ -13,11 +13,6 @@ interface UserState {
   updateUserState: (user: User | null) => void;
 }
 
-// export const useUserStore = create<UserState>()((set) => ({
-//   user: null,
-//   updateUserState: (user) => set(() => ({ user })),
-// }));
-
 export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
