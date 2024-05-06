@@ -187,7 +187,6 @@ export default function ItemDetail() {
           <Image src="/itemName.svg" width={24} height={24} alt="itemNameImg" />
           <Input
             className="w-[330px] shrink-0 border-none text-base pl-[15px] text-base"
-            placeholder="햇감자"
             type="text"
             value={itemNameValue}
             onChange={(e) => setItemNameValue(e.target.value)}
