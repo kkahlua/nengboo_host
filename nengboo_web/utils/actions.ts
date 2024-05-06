@@ -1,6 +1,7 @@
 import { supabase } from "@/utils/supabase";
 
 export const googleLogin = async () => {
+  window.ReactNativeWebView?.postMessage(JSON.stringify({ message: "login" }));
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -14,6 +15,7 @@ export const googleLogin = async () => {
 };
 
 export const kakaoLogin = async () => {
+  window.ReactNativeWebView?.postMessage(JSON.stringify({ message: "login" }));
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "kakao",
     options: {
