@@ -6,7 +6,7 @@ import SearchBar from "../../components/ui/SearchBar"
 import coldImg from "../../public/cold.png"
 import cancelImg from "../../public/cancel.png"
 
-const FridgeMain = () => {
+const refrigerator = () => {
   const dummyData = [
     {
       id: 1,
@@ -117,4 +117,4 @@ const FridgeMain = () => {
   )
 }
 
-export default FridgeMain
+export default refrigerator
