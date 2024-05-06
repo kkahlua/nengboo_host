@@ -189,7 +189,6 @@ export default function ItemDetail() {
             className="w-[330px] shrink-0 border-none text-base pl-[15px] text-base"
             type="text"
             value={itemNameValue}
-            placeholder="햇감자"
             onChange={(e) => setItemNameValue(e.target.value)}
           />
         </div>
