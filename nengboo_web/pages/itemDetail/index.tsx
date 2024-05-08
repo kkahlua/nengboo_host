@@ -1,13 +1,6 @@
 import React, { useState, ChangeEvent, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -36,7 +29,6 @@ import {
 
 export default function ItemDetail() {
   const [product, setProduct] = useState(null);
-  const [barcode, setBarcode] = useState("");
   const [createdDate, setCreatedDate] = useState("");
   const [itemNameValue, setItemNameValue] = useState("");
   const [dateValue, setDateValue] = React.useState<Date | undefined>(
@@ -187,7 +179,6 @@ export default function ItemDetail() {
     }
 
     const data = {
-      // barcode: barcode,
       product_name: itemNameValue,
       product_expiration_date: format(
         new Date(dateValue),
@@ -212,10 +203,8 @@ export default function ItemDetail() {
       } else {
         router.push("/itemPost");
       }
-      // Handle success, e.g., show a success message or redirect to another page
     } catch (error) {
       console.error("Error:", error);
-      // Handle error, e.g., show an error message to the user
     }
   };
 
@@ -295,7 +284,7 @@ export default function ItemDetail() {
           <Input
             className="w-auto shrink-0 border-none text-base pl-[15px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
             type="text"
-            placeholder="햇감자"
+            placeholder="상품명을 입력해주세요."
             value={itemNameValue}
             onChange={(e) => setItemNameValue(e.target.value)}
           />
@@ -312,7 +301,7 @@ export default function ItemDetail() {
                 )}
               >
                 {dateValue ? (
-                  format(dateValue, "PPP")
+                  format(dateValue, "yyyy-MM-dd")
                 ) : (
                   <span>날짜를 선택하세요.</span>
                 )}

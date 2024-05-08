@@ -3,13 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -238,7 +231,7 @@ export default function ItemPost() {
                 )}
               >
                 {dateValue ? (
-                  format(dateValue, "PPP")
+                  format(dateValue, "yyyy-MM-dd")
                 ) : (
                   <span>날짜를 선택하세요.</span>
                 )}
