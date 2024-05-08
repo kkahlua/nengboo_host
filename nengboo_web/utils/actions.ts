@@ -14,7 +14,7 @@ export const googleLogin = async () => {
       redirectTo: `${
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
-          : "https://nengboo-web-git-login-prgm-webapp1.vercel.app"
+          : "https://nengboo-qxj5me26l-prgm-webapp1.vercel.app"
       }/main`,
     },
   });
@@ -33,7 +33,7 @@ export const kakaoLogin = async () => {
       redirectTo: `${
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
-          : "https://nengboo-web-git-login-prgm-webapp1.vercel.app"
+          : "https://nengboo-qxj5me26l-prgm-webapp1.vercel.app"
       }/main`,
     },
   });
