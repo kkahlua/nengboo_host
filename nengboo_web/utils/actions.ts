@@ -1,6 +1,9 @@
 import { supabase } from "@/utils/supabase";
+import { sendMessage } from "./message";
 
 export const googleLogin = async () => {
+  sendMessage({ message: "login" });
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -14,6 +17,8 @@ export const googleLogin = async () => {
 };
 
 export const kakaoLogin = async () => {
+  sendMessage({ message: "login" });
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "kakao",
     options: {
