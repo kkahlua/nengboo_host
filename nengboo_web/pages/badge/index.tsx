@@ -9,7 +9,7 @@ const index = () => {
       <div className="w-[428px] h-[816px] bg-white grid grid-cols-3 justify-items-center">
         {BadgeData.map((data) => (
           <Link href={`/badge/${data.id}`} key={data.id}>
-            <div className="w-[100px] h-[137px] flex-col justify-center items-center inline-flex">
+            <div className="transition ease-in-out w-[100px] h-[137px] flex-col justify-center items-center inline-flex hover:scale-110">
               <div className="w-[100px] h-[100px] p-[5px] justify-center items-center inline-flex">
                 <Image
                   src={data.image}
