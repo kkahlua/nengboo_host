@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useCallback, useEffect } from "react";
+import React, { useState, ChangeEvent, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,8 +9,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useUserStore } from "@/store/user";
 import { supabase } from "@/utils/supabase";
 import { useToast } from "@/components/ui/use-toast";
@@ -31,7 +39,9 @@ export default function ItemDetail() {
   const [barcode, setBarcode] = useState("");
   const [createdDate, setCreatedDate] = useState("");
   const [itemNameValue, setItemNameValue] = useState("");
-  const [dateValue, setDateValue] = useState("");
+  const [dateValue, setDateValue] = React.useState<Date | undefined>(
+    new Date()
+  );
   const [quantity, setQuantity] = useState(1);
   const [hashtag, setHashTag] = useState("");
   const [hashtagsArr, setHashtagsArr] = useState<string[]>([]);
@@ -101,29 +111,6 @@ export default function ItemDetail() {
     if (quantity > 1) {
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
-  };
-
-  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    const RegNotNum = /[^0-9]/g;
-    const onlyNum = value.replace(RegNotNum, ""); // 숫자가 아닌 경우 ''
-
-    let DataFormat: any;
-    let RegDateFmt: any;
-
-    if (onlyNum.length <= 6) {
-      // 000000 -> 0000-00
-      DataFormat = "$1-$2";
-      RegDateFmt = /([0-9]{4})([0-9]+)/;
-    } else if (onlyNum.length <= 8) {
-      // 00000000 -> 0000-00-00
-      DataFormat = "$1-$2-$3";
-      RegDateFmt = /([0-9]{4})([0-9]{2})([0-9]+)/;
-    }
-
-    const newDate = onlyNum.replace(RegDateFmt, DataFormat);
-
-    setDateValue(newDate); // YYYY-MM-DD
   };
 
   const onChangeHashtag = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +189,10 @@ export default function ItemDetail() {
     const data = {
       // barcode: barcode,
       product_name: itemNameValue,
-      product_expiration_date: dateValue,
+      product_expiration_date: format(
+        new Date(dateValue),
+        "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
+      ),
       product_quantity: quantity,
       product_type: hashtagsArr.join(","),
       product_frozen_storage: keeping,
@@ -210,6 +200,7 @@ export default function ItemDetail() {
       product_updated_date: new Date().toISOString(),
     };
     console.log(JSON.stringify(data));
+
     try {
       const { error } = await supabase
         .from("products")
@@ -311,13 +302,31 @@ export default function ItemDetail() {
         </div>
         <div className="flex w-full h-[52px] max-w-sm items-center rounded-lg border border-zinc-300 px-2.5 py-2.5 mb-2.5">
           <Image src="/date.svg" width={24} height={24} alt="dateImg" />
-          <Input
-            className="w-auto shrink-0 border-none text-base pl-[15px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
-            placeholder="2024"
-            type="date"
-            value={dateValue}
-            onChange={handleDateChange}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[280px] justify-start text-left font-normal border-none",
+                  !dateValue && "text-muted-foreground"
+                )}
+              >
+                {dateValue ? (
+                  format(dateValue, "PPP")
+                ) : (
+                  <span>날짜를 선택하세요.</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={dateValue}
+                onSelect={setDateValue}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex w-full h-[52px] max-w-sm items-center rounded-lg border border-zinc-300 px-2.5 py-2.5 mb-2.5">
           <div className="flex items-center">
@@ -336,6 +345,7 @@ export default function ItemDetail() {
               height={24}
               alt="minusImg"
               onClick={handleDecrement}
+              className="cursor-pointer"
             />
             <p>{quantity}</p>
             <Image
@@ -344,6 +354,7 @@ export default function ItemDetail() {
               height={24}
               alt="plusImg"
               onClick={handleIncrement}
+              className="cursor-pointer"
             />
           </div>
         </div>

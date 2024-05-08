@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -16,16 +18,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { json } from "stream/consumers";
 import { useUserStore } from "@/store/user";
 import { useToast } from "@/components/ui/use-toast";
-
 import { getUserInfo, updateUser } from "@/utils/actions";
 import { useRouter } from "next/router";
+
 export default function ItemPost() {
   const [barcode, setBarcode] = useState("");
   const [itemNameValue, setItemNameValue] = useState("");
-  const [dateValue, setDateValue] = useState("");
+  const [dateValue, setDateValue] = React.useState<Date | undefined>(
+    new Date()
+  );
   const [quantity, setQuantity] = useState(1);
   const [hashtag, setHashTag] = useState("");
   const [hashtagsArr, setHashtagsArr] = useState<string[]>([]);
@@ -34,7 +37,6 @@ export default function ItemPost() {
   const [errors, setErrors] = useState<any>({});
   const { toast } = useToast();
   const router = useRouter();
-  // const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   const handleCancel = () => {
     setItemNameValue("");
@@ -48,29 +50,6 @@ export default function ItemPost() {
     if (quantity > 1) {
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
-  };
-
-  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    const RegNotNum = /[^0-9]/g;
-    const onlyNum = value.replace(RegNotNum, ""); // 숫자가 아닌 경우 ''
-
-    let DataFormat: any;
-    let RegDateFmt: any;
-
-    if (onlyNum.length <= 6) {
-      // 000000 -> 0000-00
-      DataFormat = "$1-$2";
-      RegDateFmt = /([0-9]{4})([0-9]+)/;
-    } else if (onlyNum.length <= 8) {
-      // 00000000 -> 0000-00-00
-      DataFormat = "$1-$2-$3";
-      RegDateFmt = /([0-9]{4})([0-9]{2})([0-9]+)/;
-    }
-
-    const newDate = onlyNum.replace(RegDateFmt, DataFormat);
-
-    setDateValue(newDate); // YYYY-MM-DD
   };
 
   const onChangeHashtag = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,13 +133,16 @@ export default function ItemPost() {
     const userData = await getUserInfo();
 
     const data = {
-      barcode: barcode, // 공백 o
-      product_name: itemNameValue, // x
-      product_expiration_date: dateValue, // x
-      product_quantity: quantity, // x
-      product_type: hashtagsArr, // x
-      product_frozen_storage: keeping, // x
-      product_memo: memo, // o
+      barcode: barcode,
+      product_name: itemNameValue,
+      product_expiration_date: format(
+        new Date(dateValue),
+        "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
+      ),
+      product_quantity: quantity,
+      product_type: hashtagsArr,
+      product_frozen_storage: keeping,
+      product_memo: memo,
       user_id: userData[0].user_id,
     };
 
@@ -180,11 +162,8 @@ export default function ItemPost() {
       } else {
         router.push("/itemPost");
       }
-
-      // Handle success, e.g., show a success message or redirect to another page
     } catch (error) {
       console.error("Error:", error);
-      // Handle error, e.g., show an error message to the user
     }
   };
 
@@ -234,6 +213,7 @@ export default function ItemPost() {
                   width={24}
                   height={24}
                   alt="cancelImg"
+                  className="cursor-pointer"
                 />
               </div>
             </div>
@@ -248,13 +228,31 @@ export default function ItemPost() {
       <div className="px-6">
         <div className="flex w-full h-[52px] max-w-sm items-center rounded-lg border border-zinc-300 px-2.5 py-2.5 mb-2.5">
           <Image src="/date.svg" width={24} height={24} alt="dateImg" />
-          <Input
-            className="w-auto shrink-0 border-none text-base pl-[15px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
-            placeholder="2024"
-            type="date"
-            value={dateValue}
-            onChange={handleDateChange}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[280px] justify-start text-left font-normal border-none",
+                  !dateValue && "text-muted-foreground"
+                )}
+              >
+                {dateValue ? (
+                  format(dateValue, "PPP")
+                ) : (
+                  <span>날짜를 선택하세요.</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={dateValue}
+                onSelect={setDateValue}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex w-full h-[52px] max-w-sm items-center rounded-lg border border-zinc-300 px-2.5 py-2.5 mb-2.5">
           <div className="flex items-center">
@@ -273,6 +271,7 @@ export default function ItemPost() {
               height={24}
               alt="minusImg"
               onClick={handleDecrement}
+              className="cursor-pointer"
             />
             <p>{quantity}</p>
             <Image
@@ -281,6 +280,7 @@ export default function ItemPost() {
               height={24}
               alt="plusImg"
               onClick={handleIncrement}
+              className="cursor-pointer"
             />
           </div>
         </div>
