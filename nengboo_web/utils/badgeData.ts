@@ -44,7 +44,7 @@ export const BadgeData = [
     content:
       "물 속의 비밀, 어류 등록의 달인! 바다의 신비를 품은 당신, 물고기의 친구!",
     image: fish,
-    selected: 0
+    selected: 1
   },
   {
     id: "6",
