@@ -17,7 +17,7 @@ export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
       user: null,
-      updateUserState: (user) => set(() => ({ user })),
+      updateUserState: (user: User) => set(() => ({ user })),
     }),
     { name: "user-storage" }
   )
