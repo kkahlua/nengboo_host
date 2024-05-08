@@ -11,7 +11,11 @@ export const googleLogin = async () => {
         access_type: "offline",
         prompt: "consent",
       },
-      redirectTo: "http://localhost:3000/main",
+      redirectTo: `${
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://nengboo-host-kkahluas-projects.vercel.app"
+      }/main`,
     },
   });
 };
@@ -26,7 +30,11 @@ export const kakaoLogin = async () => {
         access_type: "offline",
         prompt: "consent",
       },
-      redirectTo: "http://localhost:3000/main",
+      redirectTo: `${
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://nengboo-host-kkahluas-projects.vercel.app"
+      }/main`,
     },
   });
 };
@@ -45,7 +53,7 @@ export const updateUser = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!!user) {
+  if (!!user && !!user.identities && !!user.identities[0].identity_data) {
     const { data, error } = await supabase
       .from("users")
       .upsert([
@@ -57,7 +65,7 @@ export const updateUser = async () => {
         },
       ])
       .select();
-    insertRefrige(user);
+    insertRefrige();
     if (!error) console.log(data);
     else console.log("updateUser >>>", error);
   }
@@ -68,7 +76,7 @@ export const getUserInfo = async () => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!!user) {
+  if (!!user && !!user.identities && !!user.identities[0].identity_data) {
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -82,25 +90,29 @@ export const getUserInfo = async () => {
 };
 
 // 냉장고 생성
-export const insertRefrige = async (user) => {
-  const { data, error } = await supabase
-    .from("refrigerators")
-    .select("*")
-    .eq("user_id", user.identities[0].identity_data.provider_id);
-
-  if (data.length !== 0) console.log("유저가 이미 냉장고를 가지고 있습니다.");
-  else {
-    const { data: refrige, error } = await supabase
+export const insertRefrige = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!!user && !!user.identities && !!user.identities[0].identity_data) {
+    const { data, error } = await supabase
       .from("refrigerators")
-      .insert([
-        {
-          user_id: user.identities[0].identity_data.provider_id,
-          refrige_create_day: user.identities[0].created_at,
-        },
-      ])
-      .select();
+      .select("*")
+      .eq("user_id", user.identities[0].identity_data.provider_id);
+    if (!!data) console.log("유저가 이미 냉장고를 가지고 있습니다.");
+    else {
+      const { data: refrige, error } = await supabase
+        .from("refrigerators")
+        .insert([
+          {
+            user_id: user.identities[0].identity_data.provider_id,
+            refrige_create_day: user.identities[0].created_at,
+          },
+        ])
+        .select();
 
-    if (!error) console.log(refrige);
-    else console.log("insertRefrige >>>", error);
+      if (!error) console.log(refrige);
+      else console.log("insertRefrige >>>", error);
+    }
   }
 };
