@@ -75,6 +75,10 @@ export default function ItemPost() {
     setMemo(event.target.value);
   };
 
+  const handleBackClick = () => {
+    // router.push("/itemPost");
+  };
+
   const handleSubmit = async () => {
     if (!itemNameValue || itemNameValue.trim() === "") {
       errors.product_name = "상품명을 입력하세요.";
@@ -153,7 +157,7 @@ export default function ItemPost() {
       if (!response.ok) {
         throw new Error("Failed to send data to server");
       } else {
-        router.push("/itemPost");
+        // router.push("/itemPost");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -163,13 +167,15 @@ export default function ItemPost() {
   return (
     <div>
       <div className="flex items-center justify-between px-6 mt-1">
-        <Image
-          src="/back.svg"
-          width={9}
-          height={18}
-          alt="backImg"
-          className="w-[9px] h-[18px] relative"
-        />
+        <div className="cursor-pointer" onClick={handleBackClick}>
+          <Image
+            src="/back.svg"
+            width={9}
+            height={18}
+            alt="backImg"
+            className="w-[9px] h-[18px] relative"
+          />
+        </div>
         <h2 className="text-neutral-900 text-2xl font-bold">상품 등록</h2>
         <div></div>
       </div>
@@ -331,7 +337,8 @@ export default function ItemPost() {
       </div>
       <div className="flex items-center justify-center px-6 gap-2 pt-[52px]">
         <Button className="flex-grow bg-personal-gray text-btn-cancel-text h-14 text-base">
-          <Link href="/itemDetail">취소</Link>
+          {/* <Link href="/itemDetail">취소</Link> */}
+          취소
         </Button>
         <Button
           className="flex-grow bg-personal-blue h-14 text-base"

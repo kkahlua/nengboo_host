@@ -56,7 +56,7 @@ export default function ItemDetail() {
           .select("*")
           .eq("product_id", product_id)
           .single();
-        // console.log("data.product_name : ", data.product_name);
+
         const findCreatedDate = new Date(data.product_created_date);
         const formattedDate = `${findCreatedDate.getFullYear()}-${(
           findCreatedDate.getMonth() + 1
@@ -71,10 +71,9 @@ export default function ItemDetail() {
         setItemNameValue(data.product_name);
         setDateValue(data.product_expiration_date);
         setQuantity(data.product_quantity);
-        // setHashTag(data.product_type);
-        // 해시태그를 구분하여 배열로 저장
+
         if (data.product_type) {
-          const hashtags = data.product_type.split(","); // '테스트1,테스트2' -> ["테스트1", "테스트2"]
+          const hashtags = data.product_type.split(",");
           setHashtagsArr(hashtags);
         }
         setKeeping(data.product_frozen_storage);
@@ -201,7 +200,7 @@ export default function ItemDetail() {
       if (error) {
         throw new Error("Failed to send data to server");
       } else {
-        router.push("/itemPost");
+        // router.push("/itemPost");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -209,7 +208,7 @@ export default function ItemDetail() {
   };
 
   const handleBackClick = () => {
-    router.push("/itemPost");
+    // router.push("/itemPost");
   };
 
   const handleTrashClick = () => {
