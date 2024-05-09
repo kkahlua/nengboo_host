@@ -21,7 +21,9 @@ const Refrigerator = () => {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const { data: products, error } = await supabase.from("products").select("*")
+      const { data: products, error } = await supabase
+        .from("products")
+        .select("product_name, product_expiration_date, product_memo, product_quantity, product_id")
       if (error) {
         throw error
       } else {
@@ -40,10 +42,12 @@ const Refrigerator = () => {
   const fetchFilteredData = useCallback(
     debounce(async (term) => {
       try {
-        let query = supabase.from("products").select("*")
-        if (term.trim() !== "") {
-          query = query.ilike("product_name", `%${term}%`)
-        }
+        let query = supabase
+          .from("products")
+          .select(
+            "product_name, product_expiration_date, product_memo, product_quantity, product_id"
+          )
+          .or(`product_name.ilike.*${term}*, product_memo.ilike.*${term}*`)
         const { data: filteredProducts, error } = await query
         if (error) {
           throw error
@@ -54,7 +58,7 @@ const Refrigerator = () => {
         console.error("물품 검색 에러: ", error.message)
       }
       setSearchedOnce(true)
-    }, 500),
+    }, 200),
     []
   )
 
