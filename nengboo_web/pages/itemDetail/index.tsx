@@ -90,7 +90,7 @@ export default function ItemDetail() {
     };
 
     if (product_id) {
-      fetchProduct(); // product_id가 있을 때만 데이터 조회
+      fetchProduct();
     }
   }, [product_id]);
 
