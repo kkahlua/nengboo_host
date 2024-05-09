@@ -1,8 +1,8 @@
 import React from "react"
 import Image from "next/image"
 
-import arrowLeft from "../../public/arrowLeft.png"
-import search from "../../public/search.png"
+import arrowLeft from "../../public/arrowLeft.svg"
+import search from "../../public/search.svg"
 
 interface SearchBarProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void

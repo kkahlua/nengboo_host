@@ -6,8 +6,8 @@ import { supabase } from "../../utils/supabase"
 
 import SearchBar from "../../components/ui/SearchBar"
 
-import coldImg from "../../public/cold.png"
-import cancelImg from "../../public/cancel.png"
+import coldImg from "../../public/cold.svg"
+import cancelImg from "../../public/cancel.svg"
 
 const Refrigerator = () => {
   const [products, setProducts] = useState([])
@@ -26,6 +26,7 @@ const Refrigerator = () => {
         throw error
       } else {
         setProducts(products)
+        console.log(products)
       }
     } catch (error) {
       console.error("물품 조회 에러: ", error.message)
@@ -52,6 +53,7 @@ const Refrigerator = () => {
       } catch (error) {
         console.error("물품 검색 에러: ", error.message)
       }
+      setSearchedOnce(true)
     }, 500),
     []
   )
@@ -66,20 +68,24 @@ const Refrigerator = () => {
     const value = event.target.value
     setSearchTerm(value)
     setShowRecentSearches(value.trim() === "")
+    setSearchedOnce(false)
   }
 
   const handleSearchSubmit = () => {
     if (searchTerm.trim() !== "") {
+      const newSearch = { product_name: searchTerm, product_id: searchTerm }
       setRecentSearches((prevSearches) => {
-        const filteredSearches = prevSearches.filter((search) => search !== searchTerm)
-        return [searchTerm, ...filteredSearches]
+        const filteredSearches = prevSearches.filter((search) => search.product_name !== searchTerm)
+        return [newSearch, ...filteredSearches]
       })
       setShowRecentSearches(true)
     }
   }
 
-  const handleDeleteRecentSearch = (index: number) => {
-    setRecentSearches((prevSearches) => prevSearches.filter((_, i) => i !== index))
+  const handleDeleteRecentSearch = (productId: string) => {
+    setRecentSearches((prevSearches) =>
+      prevSearches.filter((search) => search.product_id !== productId)
+    )
   }
 
   const handleClearRecentSearches = () => {
@@ -120,25 +126,23 @@ const Refrigerator = () => {
           {filteredData.map((product) => (
             <div key={product.product_id} className="flex flex-col">
               <Link href={`/itemDetail/${product.product_id}`}>
-                <a>
-                  <div>
-                    <Image
-                      src={product.image}
-                      width={150}
-                      height={150}
-                      alt={product.product_name}
-                      className="mx-auto"
-                    />
-                    <div className="flex justify-between mt-2 text-center">
-                      <p>{product.product_name}</p>
-                      <p>수량: {product.product_quantity}</p>
-                    </div>
-                    <div className="flex justify-between mt-2 text-center">
-                      <p>{product.product_expiration_date}</p>
-                      <p>디데이</p>
-                    </div>
+                <div>
+                  <Image
+                    src={product.image}
+                    width={150}
+                    height={150}
+                    alt={product.product_name}
+                    className="mx-auto"
+                  />
+                  <div className="flex justify-between mt-2 text-center">
+                    <p>{product.product_name}</p>
+                    <p>수량: {product.product_quantity}</p>
                   </div>
-                </a>
+                  <div className="flex justify-between mt-2 text-center">
+                    <p>{product.product_expiration_date}</p>
+                    <p>디데이</p>
+                  </div>
+                </div>
               </Link>
             </div>
           ))}
