@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import { supabase } from "../../utils/supabase"
-import { debounce } from "lodash"
-import { useUserStore } from "../../store/user"
 import Link from "next/link"
+import { debounce } from "lodash"
+import { supabase } from "../../utils/supabase"
 
 import SearchBar from "../../components/ui/SearchBar"
 
@@ -14,7 +13,9 @@ const Refrigerator = () => {
   const [products, setProducts] = useState([])
   const [filteredData, setFilteredData] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState<string>("")
-  const [recentSearches, setRecentSearches] = useState<string[]>([])
+  const [recentSearches, setRecentSearches] = useState<
+    { product_name: string; product_id: string }[]
+  >([])
   const [showRecentSearches, setShowRecentSearches] = useState<boolean>(false)
   const [searchedOnce, setSearchedOnce] = useState<boolean>(false)
 
@@ -33,7 +34,7 @@ const Refrigerator = () => {
 
   useEffect(() => {
     fetchProducts()
-  }, [fetchProducts])
+  }, [])
 
   const fetchFilteredData = useCallback(
     debounce(async (term) => {
@@ -49,7 +50,7 @@ const Refrigerator = () => {
           setFilteredData(filteredProducts)
         }
       } catch (error) {
-        console.error("Error fetching filtered products:", error.message)
+        console.error("물품 검색 에러: ", error.message)
       }
     }, 500),
     []
@@ -90,14 +91,16 @@ const Refrigerator = () => {
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col min-h-screen ">
       <SearchBar onChange={handleSearch} onSearch={handleSearchSubmit} value={searchTerm} />
-      {showRecentSearches && recentSearches.length > 0 ? (
+      {!showRecentSearches && recentSearches.length > 0 ? (
         <div className="mt-8">
           <p className="text-black mb-2">최근 검색어</p>
           <div className="flex flex-wrap">
             {recentSearches.map((search, index) => (
               <div key={index} className=" flex items-center mb-2">
                 <div className="relative flex items-center justify-between text-center">
-                  <span className="bg-black-200 py-1 px-2 rounded-lg text-sm ">{search}</span>
+                  <span className="bg-black-200 py-1 px-2 rounded-lg text-sm ">
+                    {search.product_name}
+                  </span>
                   <button onClick={() => handleDeleteRecentSearch(index)} className="p-1">
                     <Image src={cancelImg} alt="Delete" width={12} height={12} />
                   </button>
@@ -112,8 +115,7 @@ const Refrigerator = () => {
             모든 검색어 삭제
           </button>
         </div>
-      ) : null}
-      {filteredData.length > 0 ? (
+      ) : filteredData.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 mt-8">
           {filteredData.map((product) => (
             <div key={product.product_id} className="flex flex-col">
