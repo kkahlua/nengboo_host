@@ -6,24 +6,15 @@ const index = () => {
   const router = useRouter();
   const num = parseInt(router.query.id) - 1;
   const achieved = parseInt(router.query.achieved);
-  console.log(achieved);
-
   return (
     <div>
       <div className="w-[428px] h-[816px] bg-white grid place-items-center">
         <Image
           src={BadgeData[num].image}
           alt="non"
-          style={
-            achieved
-              ? { width: 280, height: 280 }
-              : {
-                  filter: "grayscale(1)",
-                  opacity: "50%",
-                  width: 280,
-                  height: 280,
-                }
-          }
+          className={`w-[280] h-[280] ${
+            achieved ? "" : "opacity-50 grayscale"
+          }`}
           priority
         />
         <div

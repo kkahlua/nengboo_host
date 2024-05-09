@@ -13,9 +13,7 @@ const BadgeIcons = ({ data }) => {
           <Image
             src={data.image}
             alt={`Reward Picture ${data.id}`}
-            style={
-              data.achieved ? {} : { filter: "grayscale(1)", opacity: "50%" }
-            }
+            className={`${data.achieved ? "" : "opacity-50 grayscale"}`}
             priority
           />
         </div>
