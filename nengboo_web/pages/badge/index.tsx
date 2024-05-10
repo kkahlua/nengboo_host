@@ -13,7 +13,7 @@ const index = () => {
         ))}
       </div>
       <div className="w-[100%] h-[50px] grid place-items-center">
-        <Link href={"/badge/1"} className="w-[70%]">
+        <Link href={"/badge/forest"} className="w-[70%]">
           <Button className="w-[100%] bg-sky-500 hover:bg-sky-600">
             나무 보러가기
           </Button>
