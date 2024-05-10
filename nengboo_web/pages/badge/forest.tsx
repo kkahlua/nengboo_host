@@ -57,21 +57,37 @@ const Forest = () => {
           <p className="text-white text-[16px] p-[5px]">숲을 만드려면?</p>
         </div>
         <p className="text-[14px] m-[5px]">
-          {exp >= 1000000 ? "다만들었을 때" : "더 쌓아야할 때"}
+          {exp >= 1000000
+            ? "여러분의 노력으로 울창한 숲을 만들었어요!"
+            : `숲을 만들기 위해 ${
+                1000000 - exp
+              }만큼의 XP가 더 필요합니다. 열심히 활동해 XP를 모아보세요!`}
         </p>
       </div>
       <div className="bg-sky-50 w-[350px] p-[15px] rounded-lg shadow-xl">
-        <p className="font-bold text-[28px] mb-[10px]">얼마나 아꼈나면요....</p>
-        <ul>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-          <li>할 수 있는 목록</li>
-        </ul>
+        <p className="font-bold text-[28px] mb-[5px]">얼마나 아꼈나면요....</p>
+        <div className="m-[5px]">
+          <p className="text-[12px] mb-[5px]">{`현재 모여있는 XP: ${exp}`}</p>
+          <ul>
+            <li className={`${exp < 10 ? "" : "hidden"}`}>
+              경험치를 쌓아 우리가 무엇을 이루었는지 확인해보세요
+            </li>
+            <li>할 수 있는 목록</li>
+            <li className={`${exp >= 100 ? "" : "hidden"}`}>할 수 있는 목록</li>
+            <li className={`${exp >= 1000 ? "" : "hidden"}`}>
+              할 수 있는 목록
+            </li>
+            <li className={`${exp >= 10000 ? "" : "hidden"}`}>
+              할 수 있는 목록
+            </li>
+            <li className={`${exp >= 100000 ? "" : "hidden"}`}>
+              할 수 있는 목록
+            </li>
+            <li className={`${exp >= 1000000 ? "" : "hidden"}`}>
+              할 수 있는 목록
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
