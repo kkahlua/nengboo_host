@@ -1,13 +1,24 @@
 import Image from "next/image";
-import { useState } from "react";
 import forest_1 from "@/public/badge/forest_11.png";
 import forest_2 from "@/public/badge/forest_22.png";
 import forest_3 from "@/public/badge/forest_33.png";
 import forest_4 from "@/public/badge/forest_44.png";
 import forest_5 from "@/public/badge/forest_55.png";
+import { useState, useEffect } from "react";
+import { getUserInfo } from "@/utils/actions";
 
 const Forest = () => {
-  const [exp, setExp] = useState(1000000);
+  const [exp, setExp] = useState(10);
+
+  useEffect(() => {
+    const initMain = async () => {
+      const data = await getUserInfo();
+      if (data) {
+        setExp(data[0].user_xp);
+      }
+    };
+    initMain();
+  }, []);
 
   return (
     <div className="grid place-items-center">
@@ -65,26 +76,29 @@ const Forest = () => {
         </p>
       </div>
       <div className="bg-sky-50 w-[350px] p-[15px] rounded-lg shadow-xl">
-        <p className="font-bold text-[28px] mb-[5px]">얼마나 아꼈나면요....</p>
+        <p className="font-bold text-[28px] mb-[5px]">
+          무엇을 할 수 있냐면요....
+        </p>
         <div className="m-[5px]">
           <p className="text-[12px] mb-[5px]">{`현재 모여있는 XP: ${exp}`}</p>
           <ul>
-            <li className={`${exp < 10 ? "" : "hidden"}`}>
-              경험치를 쌓아 우리가 무엇을 이루었는지 확인해보세요
+            <li className={`${exp < 100 ? "" : "hidden"}`}>
+              경험치를 쌓아 우리가 무엇을 할 수 있는지 확인해보세요
             </li>
-            <li>할 수 있는 목록</li>
-            <li className={`${exp >= 100 ? "" : "hidden"}`}>할 수 있는 목록</li>
+            <li className={`${exp >= 100 ? "" : "hidden"}`}>
+              식목일 심을 묘목을 구할 수 있어요!
+            </li>
             <li className={`${exp >= 1000 ? "" : "hidden"}`}>
-              할 수 있는 목록
+              해변의 쓰레기를 치울 도구도 구할 수 있구요.
             </li>
             <li className={`${exp >= 10000 ? "" : "hidden"}`}>
-              할 수 있는 목록
+              태양광 압축 쓰레기통도 만들었네요.
             </li>
             <li className={`${exp >= 100000 ? "" : "hidden"}`}>
-              할 수 있는 목록
+              생태 보호를 위한 프로젝트도 할 수 있군요?
             </li>
             <li className={`${exp >= 1000000 ? "" : "hidden"}`}>
-              할 수 있는 목록
+              철새도래지의 쉼터까지 만들었어요!
             </li>
           </ul>
         </div>
