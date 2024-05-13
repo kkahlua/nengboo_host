@@ -5,7 +5,7 @@ import { BadgeData } from "@/utils/badgeData";
 const index = () => {
   const router = useRouter();
   const num = parseInt(router.query.id) - 1;
-  const achieved = parseInt(router.query.achieved);
+  const achieved = router.query.achieved === "false" ? false : true;
   return (
     <div>
       <div className="w-[428px] h-[816px] bg-white grid place-items-center">
