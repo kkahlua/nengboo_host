@@ -5,21 +5,27 @@ import forest_3 from "@/public/badge/forest_33.png";
 import forest_4 from "@/public/badge/forest_44.png";
 import forest_5 from "@/public/badge/forest_55.png";
 import { useState, useEffect } from "react";
-import { getUserInfo } from "@/utils/actions";
+import { supabase } from "@/utils/supabase";
 
 const Forest = () => {
-  const [exp, setExp] = useState(10);
+  const [exp, setExp] = useState(0);
 
   useEffect(() => {
-    const initMain = async () => {
-      const data = await getUserInfo();
-      if (data) {
-        setExp(data[0].user_xp);
-      }
+    const getTotalExp = async () => {
+      const { data: user, error } = await supabase
+        .from("users")
+        .select("user_xp");
+
+      let totalExp = 0;
+      const countExp = user?.map((xp) => {
+        totalExp += xp.user_xp;
+        setExp(totalExp);
+      });
     };
-    initMain();
+    getTotalExp();
   }, []);
 
+  console.log(exp);
   return (
     <div className="grid place-items-center">
       <div className="w-[350px] h-70px] mt-[20px]">

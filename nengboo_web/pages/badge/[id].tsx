@@ -6,8 +6,6 @@ const index = () => {
   const router = useRouter();
   const num = parseInt(router.query.id) - 1;
   const achieved = router.query.achieved === "false" ? false : true;
-  console.log(router.query);
-
   return (
     <div>
       <div className="w-[428px] h-[816px] bg-white grid place-items-center">
