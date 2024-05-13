@@ -8,10 +8,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { BadgeData } from "@/utils/badgeData";
 import Image from "next/image";
 
-export function BadgeIcon({ data }) {
+export function BadgeIcon({ id, name, content, fail_content, img, achieved }) {
   return (
     <AlertDialog>
       {/* 클릭 전 보이는 아이콘 영역 */}
@@ -19,18 +18,23 @@ export function BadgeIcon({ data }) {
         <div className="transition ease-in-out w-[100px] h-[137px] flex-col justify-center items-center inline-flex active:scale-110">
           <div className="w-[100px] h-[100px] p-[5px] justify-center items-center inline-flex">
             <Image
-              src={data.image}
-              alt={`Reward Picture ${data.id}`}
+              src={img}
+              alt={`Reward Picture ${id}`}
+              className={`${achieved ? "" : "opacity-50 grayscale"}`}
               priority
             />
           </div>
           <div
-            className={`self-stretch py-1 bg-indigo-50 rounded justify-center items-center gap-2.5 inline-flex`}
+            className={`self-stretch py-1  ${
+              achieved ? "bg-indigo-50" : "bg-zinc-100"
+            } rounded justify-center items-center gap-2.5 inline-flex`}
           >
             <div
-              className={`text-center text-sky-500 text-xs font-bold font-['Pretendard'] leading-[21px]`}
+              className={`text-center  ${
+                achieved ? "text-sky-500" : "text-neutral-600"
+              } text-xs font-bold font-['Pretendard'] leading-[21px]`}
             >
-              {data.name}
+              {name}
             </div>
           </div>
         </div>
@@ -39,18 +43,24 @@ export function BadgeIcon({ data }) {
       {/* 팝업 창 화면 */}
       <AlertDialogContent className="rounded-lg w-[90%] h-[90%]">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-sky-500 text-[32px] font-bold font-['Pretendard'] my-[20px]">
-            {data.name}
+          <AlertDialogTitle
+            className={`${
+              achieved ? "text-sky-500" : "text-neutral-600"
+            } text-[32px] font-bold font-['Pretendard'] my-[20px]`}
+          >
+            {name}
           </AlertDialogTitle>
           <AlertDialogDescription>
             <Image
-              src={data.image}
+              src={img}
               alt="non"
-              className={`w-[280] h-[280]`}
+              className={`w-[280] h-[280] ${
+                achieved ? "" : "opacity-50 grayscale"
+              }`}
               priority
             />
             <div className="mt-[30px] text-center text-neutral-500 text-2xl text-wrap font-medium font-['Pretendard']">
-              {data.content}
+              {achieved ? content : fail_content}
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>

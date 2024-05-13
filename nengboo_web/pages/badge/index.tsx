@@ -26,13 +26,22 @@ const index = () => {
     };
     getAcheiveData();
   }, []);
-  console.log(isAcheived);
+
+  const achieveArray = Object.values(isAcheived);
 
   return (
     <div>
       <div className="w-[428px] h-[600px] bg-white grid grid-cols-3 justify-items-center">
-        {BadgeData.map((data) => (
-          <BadgeIcon data={data} />
+        {BadgeData.map((data, index) => (
+          <BadgeIcon
+            key={index}
+            id={data.id}
+            name={data.name}
+            content={data.content}
+            fail_content={data.fail_content}
+            img={data.image}
+            achieved={achieveArray[index]}
+          />
         ))}
       </div>
       <div className="w-[100%] h-[50px] grid place-items-center">
