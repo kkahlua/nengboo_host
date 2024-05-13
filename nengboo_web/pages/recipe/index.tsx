@@ -36,7 +36,7 @@ const recipe = () => {
         <img className="w-[334px] h-[334px]" src={recipeImage} />
       </div>
 
-      <p className="mt-6 text-neutral-900 text-2xl font-bold">{recipeName}</p>
+      <p className="mt-4 text-neutral-900 text-2xl font-bold">{recipeName}</p>
 
       <SubHeader title={"재료"} />
       <ul>
